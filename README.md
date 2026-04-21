@@ -33,3 +33,19 @@ Repository ini adalah implementasi tutorial web server Rust untuk Modul 6 Advanc
 - Dari tahap ini saya semakin paham bahwa web server sederhana pun sebenarnya hanya mengirim teks terstruktur yang lalu ditafsirkan browser sebagai halaman HTML.
 
 ![Commit 2 screen capture](/assets/images/commit2.png)
+
+### Commit 3 Reflection notes
+
+1. Perubahan paling penting pada tahap ini adalah server tidak lagi selalu mengirim `hello.html`, tetapi mulai memilih respons berdasarkan `request_line`.
+- Dengan begitu path root mendapatkan halaman sukses, sedangkan path lain mendapatkan halaman `404`.
+- Ini membuat server lebih mendekati perilaku HTTP yang benar walaupun masih sangat sederhana.
+
+2. Saya mengikuti versi refactor karena pemisahan `status_line` dan `filename` membuat logic percabangan jauh lebih ringkas.
+- Kalau pembacaan file dan pembentukan response ditulis ulang di tiap cabang, akan ada duplikasi yang mudah melebar saat endpoint bertambah.
+- Setelah direfactor, yang berbeda hanya keputusan responsnya, sedangkan bagian umum seperti `read_to_string`, `Content-Length`, dan `write_all` tetap satu kali ditulis.
+
+3. Penambahan `404.html` juga membantu memisahkan isi halaman error dari logic server.
+- Saya bisa menulis pesan error yang lebih jelas tanpa mencampur HTML ke dalam percabangan Rust.
+- Dari milestone ini saya belajar bahwa refactor bukan sekadar merapikan tampilan kode, tetapi juga mengurangi duplikasi dan memudahkan pengembangan endpoint berikutnya.
+
+![Commit 3 screen capture](/assets/images/commit3.png)
