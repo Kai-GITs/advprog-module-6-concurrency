@@ -79,3 +79,18 @@ Repository ini adalah implementasi tutorial web server Rust untuk Modul 6 Advanc
 - `Job` menyederhanakan tipe closure yang panjang menjadi satu alias yang jelas.
 - `Worker` menyimpan identitas thread dan loop penerima job sehingga implementasi pool tidak menumpuk semua detail pada satu struct.
 - Setelah melihat hasilnya, saya memahami bahwa thread pool bukan sekadar banyak thread, tetapi mekanisme pembatasan concurrency yang lebih terkontrol.
+
+### Commit Bonus Reflection notes
+
+1. Saya menambahkan `build` sebagai alternatif dari `new` supaya pembuatan `ThreadPool` bisa mengembalikan `Result` alih-alih langsung panic.
+- Dengan `build`, caller bisa menangani kasus `size == 0` secara eksplisit.
+- Ini membuat API lebih fleksibel kalau nanti thread pool dipakai pada konteks yang membutuhkan error handling yang rapi.
+
+2. Saya tetap mempertahankan `new`, tetapi sekarang `new` menjadi wrapper yang memanggil `build(...).unwrap()`.
+- Pendekatan ini menjaga kompatibilitas dengan tutorial utama yang memakai `ThreadPool::new(4)`.
+- Di sisi lain, bonus ini menunjukkan bahwa API panic-based dan result-based bisa hidup berdampingan tanpa mengubah pemakaian yang sudah ada.
+
+3. Perbandingan paling jelas antara keduanya ada pada perilaku error.
+- `new(0)` cocok untuk asumsi bahwa ukuran nol adalah programmer error yang fatal.
+- `build(0)` lebih cocok untuk alur yang menerima input dinamis dan ingin mengembalikan error terstruktur.
+- Saya menambahkan test sederhana untuk membuktikan perbedaan tersebut secara langsung.
