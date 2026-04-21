@@ -49,3 +49,17 @@ Repository ini adalah implementasi tutorial web server Rust untuk Modul 6 Advanc
 - Dari milestone ini saya belajar bahwa refactor bukan sekadar merapikan tampilan kode, tetapi juga mengurangi duplikasi dan memudahkan pengembangan endpoint berikutnya.
 
 ![Commit 3 screen capture](/assets/images/commit3.png)
+
+### Commit 4 Reflection notes
+
+1. Route `/sleep` menunjukkan masalah utama server single-threaded dengan sangat jelas.
+- Ketika satu request masuk ke cabang yang tidur 10 detik, thread utama berhenti melayani request lain selama periode itu.
+- Artinya bottleneck bukan hanya pada proses render HTML, tetapi pada fakta bahwa seluruh server masih berbagi satu thread eksekusi.
+
+2. Saya juga melihat bahwa menambahkan endpoint lambat tidak perlu logic yang kompleks untuk memperlihatkan efek blocking.
+- Satu `thread::sleep(Duration::from_secs(10))` saja sudah cukup untuk mensimulasikan operasi mahal seperti query lambat atau I/O lambat.
+- Dari sini saya paham kenapa throughput server cepat turun ketika ada beberapa request berat yang datang bersamaan.
+
+3. Tahap ini menjadi motivasi yang kuat untuk pindah ke thread pool pada milestone berikutnya.
+- Selama semua request diproses serial oleh thread utama, request cepat seperti `/` tetap akan ikut antre di belakang request lambat seperti `/sleep`.
+- Jadi masalah yang harus diselesaikan berikutnya bukan isi halaman, tetapi arsitektur concurrency pada server.
