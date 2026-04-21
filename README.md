@@ -63,3 +63,19 @@ Repository ini adalah implementasi tutorial web server Rust untuk Modul 6 Advanc
 3. Tahap ini menjadi motivasi yang kuat untuk pindah ke thread pool pada milestone berikutnya.
 - Selama semua request diproses serial oleh thread utama, request cepat seperti `/` tetap akan ikut antre di belakang request lambat seperti `/sleep`.
 - Jadi masalah yang harus diselesaikan berikutnya bukan isi halaman, tetapi arsitektur concurrency pada server.
+
+### Commit 5 Reflection notes
+
+1. Perubahan inti pada milestone ini adalah request tidak lagi langsung ditangani oleh thread utama, tetapi dikirim ke `ThreadPool`.
+- Thread utama sekarang fokus menerima koneksi, sementara worker di pool yang mengeksekusi closure `handle_connection`.
+- Dengan pembagian ini, request cepat tidak harus menunggu request lambat selama masih ada worker lain yang idle.
+
+2. Saya jadi lebih paham kenapa implementasi `ThreadPool` butuh `mpsc`, `Arc`, dan `Mutex` sekaligus.
+- `mpsc::Sender<Job>` dipakai untuk mengantrekan pekerjaan dari `execute`.
+- `Arc<Mutex<mpsc::Receiver<Job>>>` dipakai agar beberapa worker bisa berbagi receiver yang sama secara aman di banyak thread.
+- Kombinasi ini membuat worker bisa mengambil job satu per satu tanpa data race.
+
+3. `Worker` dan alias `Job` membuat desain pool lebih mudah dipahami.
+- `Job` menyederhanakan tipe closure yang panjang menjadi satu alias yang jelas.
+- `Worker` menyimpan identitas thread dan loop penerima job sehingga implementasi pool tidak menumpuk semua detail pada satu struct.
+- Setelah melihat hasilnya, saya memahami bahwa thread pool bukan sekadar banyak thread, tetapi mekanisme pembatasan concurrency yang lebih terkontrol.
