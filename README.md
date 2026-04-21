@@ -46,7 +46,7 @@ Repository ini adalah implementasi tutorial web server Rust untuk Modul 6 Advanc
 
 3. Penambahan `404.html` juga membantu memisahkan isi halaman error dari logic server.
 - Saya bisa menulis pesan error yang lebih jelas tanpa mencampur HTML ke dalam percabangan Rust.
-- Dari milestone ini saya belajar bahwa refactor bukan sekadar merapikan tampilan kode, tetapi juga mengurangi duplikasi dan memudahkan pengembangan endpoint berikutnya.
+- Dari milestone ini saya belajar bahwa refactor  mengurangi duplikasi dan memudahkan pengembangan endpoint berikutnya.
 
 ![Commit 3 screen capture](/assets/images/commit3.png)
 
@@ -62,7 +62,7 @@ Repository ini adalah implementasi tutorial web server Rust untuk Modul 6 Advanc
 
 3. Tahap ini menjadi motivasi yang kuat untuk pindah ke thread pool pada milestone berikutnya.
 - Selama semua request diproses serial oleh thread utama, request cepat seperti `/` tetap akan ikut antre di belakang request lambat seperti `/sleep`.
-- Jadi masalah yang harus diselesaikan berikutnya bukan isi halaman, tetapi arsitektur concurrency pada server.
+- Jadi masalah yang harus diselesaikan berikutnya adalah arsitektur concurrency pada server.
 
 ### Commit 5 Reflection notes
 
@@ -78,7 +78,7 @@ Repository ini adalah implementasi tutorial web server Rust untuk Modul 6 Advanc
 3. `Worker` dan alias `Job` membuat desain pool lebih mudah dipahami.
 - `Job` menyederhanakan tipe closure yang panjang menjadi satu alias yang jelas.
 - `Worker` menyimpan identitas thread dan loop penerima job sehingga implementasi pool tidak menumpuk semua detail pada satu struct.
-- Setelah melihat hasilnya, saya memahami bahwa thread pool bukan sekadar banyak thread, tetapi mekanisme pembatasan concurrency yang lebih terkontrol.
+- Setelah melihat hasilnya, saya memahami bahwa thread pool merupakan mekanisme pembatasan concurrency yang lebih terkontrol.
 
 ### Commit Bonus Reflection notes
 
